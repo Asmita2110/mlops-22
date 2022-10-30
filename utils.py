@@ -70,7 +70,6 @@ def h_param_tuning(hyp_para_combo, clf, X_train, y_train, X_dev, y_dev, metric):
             best_hyp_param = hyper_param
             accuracy = curr_accuracy
             best_model = clf
-            # print(f"{best_hyp_param} \tAccuracy: {accuracy}")
 
     return best_model, accuracy, best_hyp_param
 
@@ -83,8 +82,6 @@ def train_save_model(X_train, y_train, X_dev, y_dev, model_path, h_param_comb):
     clf = svm.SVC()
     metric = metrics.accuracy_score
     best_model, best_metric, best_hyp_param = h_param_tuning(h_param_comb, clf, X_train, y_train, X_dev, y_dev, metric)
-    # if predicted < curr_predicted:
-    #     predicted = curr_predicted
 
 
     best_param_config = "_".join([h+"_"+str(best_hyp_param[h]) for h in best_hyp_param])
@@ -96,11 +93,3 @@ def train_save_model(X_train, y_train, X_dev, y_dev, model_path, h_param_comb):
 
 
     return model_path, clf
-
-
-
-
-# perf_test = {}
-# for k in range(S):
-#     train, dev, test = create_split()
-#     best_model = train_and_h_tune()
