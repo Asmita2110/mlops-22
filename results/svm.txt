@@ -1,0 +1,4 @@
+Accuracy: [0.98895028 0.98895028 0.98895028 0.98895028 0.98895028]
+Vriance: 0.0
+Mean: 0.988950276243094
+Model saved at: results/svm.txt

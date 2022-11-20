@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-
+from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn import svm, metrics
 from joblib import dump,load
@@ -27,11 +27,21 @@ def data_viz(dataset):
         ax.set_title("Training: %i" % label)
 
 
-def train_dev_test_split(data, label, train_frac, dev_frac, test_frac):
+# To ensure that the test and train dataset is remains same whether the code is update or not.
+# For that reason we uses random_state= 5. 
+# Using random_state we can achieve this thing.
+def train_dev_test_split(data, label, train_frac, dev_frac, test_frac,randomstate):
     dev_test_frac = 1- train_frac
     X_train, X_dev_test, y_train, y_dev_test = train_test_split(
-        data, label, test_size=dev_test_frac, shuffle=True, random_state = 5
+        data, label, test_size=dev_test_frac, shuffle=True, random_state = randomstate
     )
+    
+    
+    # # Printing Train dataset after split into X_train and X_dev_test
+    # print("Traing dataset is : ",X_train)
+    
+    # # Printing Testing dev dataset
+    # print("Testing Datset is : ",X_dev_test)
 
 
     fraction_want = dev_frac/(dev_frac+test_frac)
@@ -39,6 +49,11 @@ def train_dev_test_split(data, label, train_frac, dev_frac, test_frac):
         X_dev_test, y_dev_test, test_size=fraction_want, shuffle=True, random_state = 5
     )
 
+    # # Printing Testing dataset
+    # print("Traing dataset is : ",X_test)
+    
+    # # Printing Dev dataset
+    # print("Testing Datset is : ",X_de
     return X_train, y_train, X_dev, y_dev, X_dev, y_dev
 
 
@@ -99,6 +114,61 @@ def train_save_model(X_train, y_train, X_dev, y_dev, model_path, h_param_comb):
 
 
 
+# When Random state is set so that spliting of dataset is set to true. whether the  code is re-run
+# Random State value can be set to any value it doesn't matter. 
+# But after setting up random_state = N. Whether we re-run our code it will not split our dataset randomly
+def test_random_split_same():
+    
+    # fractions
+    train_frac = 0.7
+    test_frac = 0.15
+    dev_frac = 0.15
+
+    # actual data
+    digits = datasets.load_digits()
+    data, label = preprocess_digits(digits)
+
+    X_train1, X_test1, y_train1, y_test1 = train_test_split(
+        data, label, test_size=test_frac, shuffle=True, random_state = 5
+    )
+
+    X_train2, X_test2, y_train2, y_test2 = train_test_split(
+        data, label, test_size=test_frac, shuffle=True, random_state = 5
+    )
+
+    # checking
+    assert (X_train1 == X_train2).all()
+    assert (X_test1 == X_test2).all()
+    assert (y_train1 == y_train2).all()
+    assert (y_test1 == y_test2).all()
+    
+  
+# here we are not set random_state. And because of that data split will not be same.
+def test_random_split_not_same():
+    # fractions
+    train_frac = 0.7
+    test_frac = 0.15
+    dev_frac = 0.15
+
+    # actual data
+    digits = datasets.load_digits()
+    data, label = preprocess_digits(digits)
+
+    X_train1, X_test1, y_train1, y_test1 = train_test_split(
+        data, label, test_size=test_frac, shuffle=True
+    )
+
+    X_train2, X_test2, y_train2, y_test2 = train_test_split(
+        data, label, test_size=test_frac, shuffle=True
+    )
+
+    # checking
+    assert (X_train1 == X_train2).all() == False
+    assert (X_test1 == X_test2).all() == False
+    assert (y_train1 == y_train2).all() == False
+    assert (y_test1 == y_test2).all() == False
+    
+    
 
 # perf_test = {}
 # for k in range(S):
